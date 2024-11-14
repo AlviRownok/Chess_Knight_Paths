@@ -1,0 +1,16 @@
+{
+    // Default starting position in algebraic notation
+    "start": "a1",
+  
+    // Default ending position in algebraic notation
+    "end": "h8",
+  
+    // Output file format: dot, pdf, or png
+    "output_format": "pdf",
+  
+    // Output file name without extension
+    "output_file": "paths",
+  
+    // Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    "log_level": "INFO"
+  }  
