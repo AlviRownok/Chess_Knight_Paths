@@ -6,7 +6,7 @@
 - **PDF and PNG images** of the paths overlaid on a chessboard
 - **Animated GIFs** showing the knight moving along each path
 
-![Knight Paths Animation](Knight Paths Animation.gif)
+![Knight Paths Animation](Visuals.gif)
 
 ---
 
