@@ -87,7 +87,7 @@ Experience the application live at: [https://chessknightpaths-v42.streamlit.app/
 If you are running the program locally using the provided zip file, the working directory is:
 
 ```
-C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\kiwifarm_knight
+C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\.......
 ```
 
 - Replace `YourUsername` with your actual Windows username.
