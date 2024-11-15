@@ -141,6 +141,10 @@ docker build -t knight-paths-app .
 docker run -p 8501:8501 --rm knight-paths-app
 ```
 
+**Access the App**
+
+After running the Docker container, you can access the Streamlit app in your browser at [http://localhost:8501](http://localhost:8501).
+
 **Note**: On Windows, you may need to adjust the volume mount path.
 
 ---
