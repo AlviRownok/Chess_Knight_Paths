@@ -150,7 +150,7 @@ If you prefer to run the project in a Docker container, follow these steps.
 
 #### 2. Build the Docker Image
 
-Navigate to the project directory (e.g., `C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\kiwifarm_knight`), then run:
+Navigate to the project directory (e.g., `C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\..........`), then run:
 
 ```bash
 docker build -t knight-paths-app .
