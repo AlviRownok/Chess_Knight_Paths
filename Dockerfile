@@ -1,4 +1,4 @@
-# Dockerfile for Knight's Shortest Path Finder
+# Dockerfile for Knight's Shortest Path Finder (Streamlit App)
 FROM python:3.12-slim
 
 # Install system dependencies
@@ -10,6 +10,7 @@ RUN apt-get update && \
         libjpeg-dev \
         zlib1g-dev \
         fonts-dejavu-core \
+        ttf-dejavu-core \
         build-essential \
         && rm -rf /var/lib/apt/lists/*
 
@@ -22,5 +23,11 @@ COPY . /app
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set default command
-CMD ["python", "knight_paths.py"]
+# Expose the port that Streamlit will run on
+EXPOSE 8501
+
+# Set environment variable to prevent Streamlit from launching a browser
+ENV STREAMLIT_HEADLESS=true
+
+# Command to run the Streamlit app
+CMD ["streamlit", "run", "knight_paths.py", "--server.port=8501", "--server.address=0.0.0.0"]

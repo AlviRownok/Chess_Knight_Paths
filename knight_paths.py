@@ -1,35 +1,30 @@
 """
-Knight's Shortest Path Finder
+Knight's Shortest Path Finder (Streamlit Version)
 
-This script finds all minimum-length sequences for a knight to move from an initial cell
-to a final cell on an empty chessboard. It generates:
-- A Graphviz DOT file representing the paths.
-- PDF and PNG images of the paths overlaid on a chessboard.
-- A GIF animation showing the knight moving along each path.
+This Streamlit app finds all minimum-length sequences for a knight to move from an initial cell
+to a final cell on an empty chessboard. It displays:
+- An animated GIF showing the knight moving along each path.
 
 Features:
 - Accepts positions in algebraic chess notation (e.g., e4, h7)
-- Prompts user for input if arguments are not provided
-- Generates visualizations in DOT, PDF, PNG, and GIF formats
+- Provides input fields for user to enter positions
+- Generates visualizations in GIF format displayed within the app
 - Includes detailed logging and error handling
 """
 
-import sys  # Provides access to some variables used or maintained by the interpreter
-import os  # Miscellaneous operating system interfaces
-import argparse  # Parser for command-line options, arguments, and sub-commands
-import logging  # Logging facility for Python
-import re  # Regular expression operations
-from collections import deque  # Container datatype providing fast appends and pops
-import graphviz  # Graph visualization software
-import random  # Generate pseudo-random numbers
+import sys
+import os
+import logging
+import re
+from collections import deque
+import random
 
-import matplotlib.pyplot as plt  # MATLAB-like plotting framework
-import matplotlib.patches as patches  # Create patch objects for matplotlib plots
-from matplotlib.colors import ListedColormap  # Generate custom colormaps
-import matplotlib.animation as animation  # Support for animations in matplotlib
-from PIL import Image, ImageDraw, ImageFont  # Python Imaging Library for image manipulation
-import numpy as np  # Fundamental package for scientific computing with Python
-import imageio  # Read and write image data
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+import imageio
+import streamlit as st  # Streamlit for web app
 
 # Set up logging configuration
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -72,65 +67,7 @@ class KnightPathFinder:
                     queue.append(path + [next_position])  # Add the new path to the queue
         return paths  # Return all the shortest paths found
 
-    def generate_graphviz(self, paths, filename='paths'):
-        dot = graphviz.Digraph(comment="Knight's Shortest Paths")  # Create a new directed graph
-        for idx, path in enumerate(paths):
-            with dot.subgraph(name=f'cluster_{idx}') as c:  # Create a subgraph for each path
-                c.attr(label=f'Path {idx + 1}')  # Label the subgraph
-                for i in range(len(path) - 1):
-                    from_square = self.coord_to_alg(path[i])  # Convert coordinate to algebraic notation
-                    to_square = self.coord_to_alg(path[i + 1])  # Convert next coordinate
-                    c.edge(from_square, to_square)  # Add an edge between the squares
-                # Mark start and end nodes
-                c.node(self.coord_to_alg(path[0]), color='green')  # Start node in green
-                c.node(self.coord_to_alg(path[-1]), color='red')  # End node in red
-        dot.format = 'dot'  # Set output format to DOT
-        dot.render(filename, cleanup=True)  # Render the graph and clean up temporary files
-        logging.info(f"Graphviz DOT file saved to {filename}.dot")  # Log the file creation
-
-    def draw_paths_on_board(self, paths, filename='paths'):
-        # Create a chessboard
-        board_colors = ['#F0D9B5', '#B58863']  # Light and dark square colors
-        cmap = ListedColormap(board_colors)  # Create a colormap
-        board = [[(row + col) % 2 for col in range(8)] for row in range(8)]  # Generate the board pattern
-
-        fig, ax = plt.subplots(figsize=(8, 8))  # Create a figure and axis
-        ax.imshow(board, cmap=cmap, extent=(0, 8, 0, 8))  # Display the board
-
-        # Draw the paths
-        colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta', 'yellow']  # Colors for paths
-        for idx, path in enumerate(paths):
-            color = colors[idx % len(colors)]  # Select color for the path
-            xs = [coord[1] + 0.5 for coord in path]  # X-coordinates for plotting
-            ys = [coord[0] + 0.5 for coord in path]  # Y-coordinates for plotting
-            ax.plot(xs, ys, marker='o', color=color, linewidth=2, label=f'Path {idx + 1}')  # Plot the path
-            # Mark start and end points
-            ax.plot(xs[0], ys[0], marker='o', markersize=12, color='green', markeredgecolor='black')  # Start point
-            ax.plot(xs[-1], ys[-1], marker='o', markersize=12, color='red', markeredgecolor='black')  # End point
-
-        # Add labels to squares
-        files = 'abcdefgh'  # Files (columns) labels
-        ranks = '12345678'  # Ranks (rows) labels
-        for row in range(8):
-            for col in range(8):
-                square = f"{files[col]}{row + 1}"  # Create square notation
-                ax.text(col + 0.5, row + 0.5, square, ha='center', va='center', fontsize=8, color='black')  # Add text
-
-        # Set axis labels and title
-        ax.set_xticks([])  # Remove x-axis ticks
-        ax.set_yticks([])  # Remove y-axis ticks
-        ax.set_xlim(0, 8)  # Set x-axis limits
-        ax.set_ylim(0, 8)  # Set y-axis limits
-        ax.set_title("Knight's Shortest Paths")  # Set plot title
-        ax.legend()  # Add a legend
-
-        # Save the figure
-        plt.savefig(f"{filename}.png", bbox_inches='tight')  # Save as PNG
-        plt.savefig(f"{filename}.pdf", bbox_inches='tight')  # Save as PDF
-        logging.info(f"Paths overlaid on chessboard saved as {filename}.png and {filename}.pdf")  # Log info
-        plt.close()  # Close the figure
-
-    def create_animation(self, paths, filename='paths'):
+    def create_animation(self, paths):
         # Load knight image
         knight_image = self.get_knight_image()  # Get the image of the knight piece
 
@@ -180,34 +117,33 @@ class KnightPathFinder:
                 images.append(image)  # Add frame to images list
                 plt.close(fig)  # Close the figure
 
-        # Save as GIF
-        imageio.mimsave(f'{filename}.gif', images, fps=1)  # Create GIF from images
-        logging.info(f"Animation saved as {filename}.gif")  # Log completion
+        # Save as GIF to a BytesIO object
+        import io
+        bytes_io = io.BytesIO()
+        imageio.mimsave(bytes_io, images, format='GIF', fps=1)
+        bytes_io.seek(0)
+        return bytes_io.getvalue()  # Return the GIF bytes
 
     def get_knight_image(self):
-        import os  # Import os for file path operations
-        # Create a transparent image
-        img = Image.new('RGBA', (100, 100), color=(255, 255, 255, 0))  # Create a blank image
-        d = ImageDraw.Draw(img)  # Create a drawing context
+        import os                                           # Import os module for file path operations
+        img = Image.new('RGBA', (100, 100), color=(255, 255, 255, 0))  # Create a transparent image (100x100 pixels)
+        d = ImageDraw.Draw(img)                             # Initialize drawing context on the image
         try:
-            # Load the font from the local directory
-            font_path = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")  # Path to font file
-            font = ImageFont.truetype(font_path, 80)  # Load the font at size 80
-            d.text((10, 10), '♘', font=font, fill=(0, 0, 0))  # Draw the knight symbol
+            font_path = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")  # Build path to the font file
+            font = ImageFont.truetype(font_path, 80)        # Load the TrueType font at size 80
+            d.text((10, 10), '♘', font=font, fill=(0, 0, 0))  # Draw the knight symbol '♘' at position (10,10)
         except IOError as e:
-            logging.error(f"Font could not be loaded: {e}")  # Log the error
-            # Fallback to a simple 'K' character or handle as needed
-            font = ImageFont.load_default()  # Load default font
-            d.text((10, 10), 'K', font=font, fill=(0, 0, 0))  # Draw placeholder
-        # Convert PIL image to numpy array for matplotlib
-        knight_image = np.array(img)  # Convert image to array
-        return knight_image  # Return the image array
+            logging.error(f"Font could not be loaded: {e}")  # Log an error if the font can't be loaded
+            font = ImageFont.load_default()                 # Fallback: load the default font
+            d.text((10, 10), 'K', font=font, fill=(0, 0, 0))  # Draw 'K' instead of '♘' at position (10,10)
+        knight_image = np.array(img)                        # Convert the image to a NumPy array
+        return knight_image                                 # Return the knight image array
 
     @staticmethod
     def alg_to_coord(alg_notation):
         files = 'abcdefgh'  # Files (columns) on the chessboard
         ranks = '12345678'  # Ranks (rows) on the chessboard
-        match = re.match(r'^([a-hA-H])([1-8])$', alg_notation)  # Match algebraic notation
+        match = re.match(r'^([a-hA-H])([1-8])$', alg_notation.strip())  # Match algebraic notation
         if match:
             file_char, rank_char = match.groups()  # Extract file and rank
             col = files.index(file_char.lower())  # Convert file to column index
@@ -226,78 +162,52 @@ class KnightPathFinder:
         else:
             raise ValueError(f"Invalid coordinate: {coord}")  # Raise error if out of bounds
 
-def prompt_for_position(prompt_message, suggestions):
-    while True:
-        suggestion_text = f"e.g., '{suggestions[0]}' or '{suggestions[1]}'"  # Example suggestions
-        user_input = input(f"{prompt_message} ({suggestion_text}): ").strip()  # Prompt user
-        if re.match(r'^[a-hA-H][1-8]$', user_input):  # Validate input
-            return user_input  # Return valid input
-        else:
-            print("Invalid input. Please enter a valid chess position (a1 to h8).")  # Error message
-
+# Streamlit App
 def main():
-    # Default configuration
-    config = {
-        "output_file": "paths",  # Default output filename
-    }
+    st.set_page_config(layout="wide")  # Set layout to wide mode
 
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description="Knight's Shortest Path Finder")  # Create parser
-    parser.add_argument('-s', '--start', help='Starting position (e.g., e4)')  # Start position argument
-    parser.add_argument('-e', '--end', help='Ending position (e.g., h7)')  # End position argument
-    parser.add_argument('-o', '--output', help='Output file name without extension')  # Output file argument
-    parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging')  # Verbose flag
+    # Create two columns for layout
+    col1, col2 = st.columns([1, 2])
 
-    args = parser.parse_args()  # Parse command-line arguments
+    with col1:
+        st.header("Knight's Shortest Path Finder")
+        st.write("Enter the starting and ending positions in algebraic notation (e.g., e4, h7).")
 
-    # Update configuration with command-line arguments
-    if args.output:
-        config['output_file'] = args.output  # Set output filename
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)  # Enable debug logging
+        # Input fields for starting and ending positions
+        start_input = st.text_input("Enter the starting position (e.g., e4)", value="")
+        end_input = st.text_input("Enter the ending position (e.g., h7)", value="")
 
-    # Prompt for start and end positions
-    positions = [f"{file}{rank}" for file in 'abcdefgh' for rank in '12345678']  # All valid positions
-    if args.start:
-        start_input = args.start  # Use provided start position
-    else:
-        suggestions = random.sample(positions, 2)  # Generate suggestions
-        start_input = prompt_for_position("Enter the starting position", suggestions)  # Prompt user
+        # Button to trigger the path finding
+        if st.button("Find Paths"):
+            # Clear previous outputs
+            if 'gif_bytes' in st.session_state:
+                del st.session_state['gif_bytes']
+            try:
+                # Validate inputs
+                start_coord = KnightPathFinder.alg_to_coord(start_input)
+                end_coord = KnightPathFinder.alg_to_coord(end_input)
 
-    if args.end:
-        end_input = args.end  # Use provided end position
-    else:
-        suggestions = random.sample(positions, 2)  # Generate suggestions
-        end_input = prompt_for_position("Enter the ending position", suggestions)  # Prompt user
+                # Initialize and run pathfinder
+                finder = KnightPathFinder(start_coord, end_coord)
+                paths = finder.bfs_paths()
 
-    try:
-        # Convert algebraic notation to coordinates
-        start_coord = KnightPathFinder.alg_to_coord(start_input)  # Convert start position
-        end_coord = KnightPathFinder.alg_to_coord(end_input)  # Convert end position
+                if not paths:
+                    st.warning(f"No paths found from {start_input} to {end_input}.")
+                else:
+                    st.info(f"Found {len(paths)} shortest path(s) from {start_input} to {end_input}.")
+                    # Generate the GIF animation
+                    gif_bytes = finder.create_animation(paths)
+                    # Store the GIF bytes in session state
+                    st.session_state['gif_bytes'] = gif_bytes
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
-        # Initialize and run pathfinder
-        finder = KnightPathFinder(start_coord, end_coord)  # Create an instance
-        paths = finder.bfs_paths()  # Find all shortest paths
-
-        if not paths:
-            logging.warning(f"No paths found from {start_input} to {end_input}.")  # Log warning
-            sys.exit(0)  # Exit if no paths found
-
-        # Log the number of paths found
-        logging.info(f"Found {len(paths)} shortest path(s) from {start_input} to {end_input}.")  # Log info
-
-        # Generate Graphviz DOT file
-        finder.generate_graphviz(paths, filename=config['output_file'])  # Generate DOT file
-
-        # Draw paths on the chessboard
-        finder.draw_paths_on_board(paths, filename=config['output_file'])  # Generate images
-
-        # Create animation GIF
-        finder.create_animation(paths, filename=config['output_file'])  # Generate GIF
-
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")  # Log error
-        sys.exit(1)  # Exit with error code
+    with col2:
+        # Display the GIF animation
+        if 'gif_bytes' in st.session_state:
+            st.image(st.session_state['gif_bytes'], use_column_width=True)
+        else:
+            st.write("The animation will appear here after you input positions and click 'Find Paths'.")
 
 if __name__ == "__main__":
-    main()  # Run the main function
+    main()
