@@ -1,10 +1,12 @@
 # Chess_Knight_Paths
 
-**Chess_Knight_Paths** is a Python project that calculates all the minimum-length sequences for a knight to move from a starting cell to an ending cell on an empty chessboard. The project accepts positions in algebraic notation, prompts user input with suggestions, and generates comprehensive visualizations of the paths, including:
+**Chess_Knight_Paths** is a Python project that calculates all the minimum-length sequences for a knight to move from a starting cell to an ending cell on an empty chessboard. The project accepts positions in algebraic notation and generates comprehensive visualizations of the paths, including:
 
+- **Animated GIFs** showing the knight moving along each path
 - **Graphviz DOT files**
 - **PDF and PNG images** of the paths overlaid on a chessboard
-- **Animated GIFs** showing the knight moving along each path
+
+[**Live Demo**](https://chessknightpaths-v42.streamlit.app/)
 
 <p align="center">
   <img src="Visuals.gif" alt="Knight Paths Animation" width="300"/>
@@ -15,11 +17,13 @@
 ## Table of Contents
 
 - [Features](#features)
+- [Live Demo](#live-demo)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Local Installation](#local-installation)
   - [Docker Installation](#docker-installation)
 - [Usage](#usage)
+  - [Running the Streamlit App](#running-the-streamlit-app)
   - [Running the Script](#running-the-script)
   - [Command-Line Arguments](#command-line-arguments)
   - [Examples](#examples)
@@ -36,15 +40,21 @@
 
 ## Features
 
-- **User-Friendly Input**: Prompts the user for starting and ending positions with helpful suggestions if not provided via command-line arguments.
-- **Algebraic Notation Support**: Accepts chess positions in standard algebraic notation (e.g., `e4`, `h7`).
+- **Web Interface with Streamlit**: An interactive web application allowing users to input starting and ending positions and visualize the knight's paths in real-time.
+- **User-Friendly Input**: Accepts positions in standard algebraic notation (e.g., `e4`, `h7`).
 - **Visualizations**:
+  - **Animated GIFs**: Creates animations of the knight moving along each path using a knight chess piece icon.
   - **Graphviz DOT Files**: Represents the shortest paths as graphs with start and end points marked.
   - **Chessboard Images**: Generates PDF and PNG images showing the paths overlaid on a chessboard with start and end points highlighted.
-  - **Animated GIFs**: Creates animations of the knight moving along each path using a knight chess piece icon.
 - **Detailed Logging**: Provides informative logs at different verbosity levels for easy debugging and understanding of the process.
 - **Error Handling**: Includes comprehensive error handling for invalid inputs and missing dependencies, ensuring the script exits gracefully when issues arise.
 - **Cross-Platform Compatibility**: Designed to work on Windows, macOS, and Linux systems.
+
+---
+
+## Live Demo
+
+Experience the application live at: [https://chessknightpaths-v42.streamlit.app/](https://chessknightpaths-v42.streamlit.app/)
 
 ---
 
@@ -52,9 +62,9 @@
 
 ### Python and Packages
 
-- **Python 3.12.4** or higher
+- **Python 3.7** or higher (Note: Streamlit Cloud supports up to Python 3.9)
 - **Python Packages** (listed in `requirements.txt`):
-  - `graphviz`
+  - `streamlit`
   - `matplotlib`
   - `Pillow`
   - `numpy`
@@ -62,7 +72,6 @@
 
 ### System Dependencies
 
-- **Graphviz**: Required for generating DOT files and visualizations.
 - **Fonts**:
   - **DejaVu Sans**: Used for rendering the knight symbol ('♘') in the animations.
   - Alternatively, any font that supports the '♘' character.
@@ -80,45 +89,7 @@ git clone https://github.com/AlviRownok/Chess_Knight_Paths.git
 cd Chess_Knight_Paths
 ```
 
-#### 2. Install System Dependencies
-
-##### **For Windows**
-
-1. **Install Graphviz**:
-
-   - Download the installer from the [official website](https://graphviz.org/download/).
-   - Run the installer and follow the instructions.
-   - Add Graphviz to your system `PATH`:
-     - Search for "Edit the system environment variables" in the Start Menu.
-     - Click on "Environment Variables".
-     - Under "System variables", select "Path" and click "Edit".
-     - Click "New" and add the path to your Graphviz `bin` directory (e.g., `C:\Program Files\Graphviz\bin`).
-     - Click "OK" to save changes.
-
-2. **Install DejaVu Fonts** (if necessary):
-
-   - Download the font from [DejaVu Fonts](https://dejavu-fonts.github.io/Downloads.html).
-   - Install the `DejaVuSans.ttf` font by double-clicking and selecting "Install".
-   - Alternatively, include the `DejaVuSans.ttf` file in your project directory.
-
-##### **For macOS**
-
-- Install Graphviz via Homebrew:
-
-  ```bash
-  brew install graphviz
-  ```
-
-##### **For Linux (Ubuntu/Debian)**
-
-- Install Graphviz and fonts:
-
-  ```bash
-  sudo apt-get update
-  sudo apt-get install graphviz fonts-dejavu-core
-  ```
-
-#### 3. Install Python Dependencies
+#### 2. Install Python Dependencies
 
 It's recommended to use a virtual environment.
 
@@ -161,13 +132,13 @@ If you prefer to run the project in a Docker container, follow these steps.
 #### 2. Build the Docker Image
 
 ```bash
-docker build -t knight-paths .
+docker build -t knight-paths-app .
 ```
 
 #### 3. Run the Docker Container
 
 ```bash
-docker run --rm -it -v "$(pwd):/app" knight-paths
+docker run -p 8501:8501 --rm knight-paths-app
 ```
 
 **Note**: On Windows, you may need to adjust the volume mount path.
@@ -176,7 +147,30 @@ docker run --rm -it -v "$(pwd):/app" knight-paths
 
 ## Usage
 
+### Running the Streamlit App
+
+#### **Option 1: Live Demo**
+
+Visit the live demo at [https://chessknightpaths-v42.streamlit.app/](https://chessknightpaths-v42.streamlit.app/) to use the application without any installation.
+
+#### **Option 2: Local Streamlit App**
+
+Run the Streamlit app locally on your machine.
+
+```bash
+streamlit run knight_paths.py
+```
+
+**Sample Interaction**:
+
+- Enter the starting position (e.g., `e4`).
+- Enter the ending position (e.g., `h7`).
+- Click the **"Find Paths"** button.
+- The animation will appear on the right side of the interface.
+
 ### Running the Script
+
+If you prefer to run the script via command line:
 
 #### **Option 1: Interactive Mode**
 
@@ -192,9 +186,7 @@ python knight_paths.py
 Enter the starting position (e.g., 'd5' or 'a3'): e4
 Enter the ending position (e.g., 'h7' or 'b1'): h7
 INFO: Found 6 shortest path(s) from e4 to h7.
-INFO: Graphviz DOT file saved to paths.dot
-INFO: Paths overlaid on chessboard saved as paths.png and paths.pdf
-INFO: Animation saved as paths.gif
+INFO: Animation displayed in Streamlit app.
 ```
 
 #### **Option 2: Command-Line Arguments**
@@ -241,21 +233,21 @@ python knight_paths.py [-h] [-s START] [-e END] [-o OUTPUT] [-v]
 
 ## Output Files
 
-The script generates the following output files in your project directory:
+When running the script via command line, the script can generate the following output files in your project directory:
 
-1. **Graphviz DOT File**: `paths.dot`
+1. **Animated GIF**: `paths.gif`
+   - An animation showing the knight moving along each path.
+   - Uses a knight chess piece icon for visualization.
+
+2. **Graphviz DOT File**: `paths.dot`
    - A DOT file representing the shortest paths graphically.
    - Start nodes are marked in green, and end nodes in red.
 
-2. **Chessboard Images**:
+3. **Chessboard Images**:
    - **PNG Image**: `paths.png`
    - **PDF Document**: `paths.pdf`
    - Visual representations of the paths overlaid on a chessboard.
    - Start positions are highlighted in green, end positions in red.
-
-3. **Animated GIF**: `paths.gif`
-   - An animation showing the knight moving along each path.
-   - Uses a knight chess piece icon for visualization.
 
 ---
 
@@ -263,7 +255,7 @@ The script generates the following output files in your project directory:
 
 ```
 Chess_Knight_Paths/
-├── knight_paths.py       # Main script
+├── knight_paths.py       # Main script (Streamlit app)
 ├── requirements.txt      # Python dependencies
 ├── Dockerfile            # Docker configuration
 ├── .gitignore            # Git ignore file
@@ -271,7 +263,7 @@ Chess_Knight_Paths/
 ├── config.jsonc          # Configuration file (if used)
 ├── LICENSE               # License information
 ├── DejaVuSans.ttf        # Font file (if included locally)
-└── paths.gif             # Sample animated GIF (output)
+└── Visuals.gif           # Sample animated GIF (output)
 ```
 
 ---
@@ -281,8 +273,7 @@ Chess_Knight_Paths/
 ### **Script Workflow**
 
 1. **Input Handling**:
-   - The script accepts starting and ending positions in algebraic notation.
-   - If not provided via command-line arguments, it prompts the user with suggestions.
+   - The Streamlit app accepts starting and ending positions in algebraic notation via user input fields.
 
 2. **Coordinate Conversion**:
    - Converts algebraic notation to 0-based row and column indices for internal processing.
@@ -292,31 +283,31 @@ Chess_Knight_Paths/
    - Only valid knight moves are considered.
 
 4. **Visualization Generation**:
-   - **Graphviz DOT File**:
+   - **Animated GIF**:
+     - Generates frames showing the knight moving along each path step by step.
+     - Compiles frames into an animation displayed within the app.
+   - **Graphviz DOT File** (when running via command line):
      - Represents paths as graphs.
      - Nodes are chessboard squares.
      - Edges represent knight moves.
-   - **Chessboard Images**:
+   - **Chessboard Images** (when running via command line):
      - Creates an 8x8 grid representing the chessboard.
      - Overlays the paths with different colors.
      - Marks start and end positions distinctly.
-   - **Animated GIF**:
-     - Generates frames showing the knight moving along each path step by step.
-     - Compiles frames into an animation.
 
 5. **Output Files Creation**:
-   - Saves the generated visualizations in the specified formats.
-   - Ensures files are saved with the appropriate extensions.
+   - Saves the generated visualizations in the specified formats when running via command line.
+   - In the Streamlit app, displays the animation directly without saving files.
 
 ### **Key Components**
 
 - **KnightPathFinder Class**:
   - Encapsulates the logic for path finding and visualization.
-  - Methods include `bfs_paths`, `generate_graphviz`, `draw_paths_on_board`, and `create_animation`.
+  - Methods include `bfs_paths`, `create_animation`, and utility functions for coordinate conversions.
 
 - **Error Handling**:
   - Validates inputs and provides informative error messages.
-  - Handles exceptions during file generation and resource loading.
+  - Handles exceptions during resource loading.
 
 - **Logging**:
   - Uses Python's `logging` module to provide status updates and debug information.
@@ -328,13 +319,9 @@ Chess_Knight_Paths/
 
 ### **Common Issues and Solutions**
 
-- **Graphviz Not Found**:
-  - **Error Message**: `graphviz.backend.ExecutableNotFound: failed to execute ['dot', '-Kdot', '-Tdot', '-O', 'filename'], make sure the Graphviz executables are on your systems' PATH`
-  - **Solution**: Ensure Graphviz is installed and added to your system `PATH`.
-
 - **Font Loading Error**:
   - **Error Message**: `Font could not be loaded: cannot open resource`
-  - **Solution**: Make sure the `DejaVuSans.ttf` font is installed or included in your project directory. Modify the font path in the script if necessary.
+  - **Solution**: Ensure the `DejaVuSans.ttf` font is included in your project directory. Modify the font path in the script if necessary.
 
 - **Knight Image Not Displaying**:
   - **Issue**: The knight symbol does not appear in the animations.
@@ -344,9 +331,9 @@ Chess_Knight_Paths/
   - **Error Message**: `ModuleNotFoundError: No module named 'module_name'`
   - **Solution**: Install missing dependencies using `pip install -r requirements.txt`.
 
-- **Permission Errors When Using Docker**:
-  - **Issue**: Files generated inside the Docker container have incorrect permissions.
-  - **Solution**: Adjust Docker run command or file permissions as needed.
+- **Streamlit App Not Loading**:
+  - **Issue**: The app does not load when running locally.
+  - **Solution**: Ensure all dependencies are installed and that you are using the correct Python version.
 
 ---
 
@@ -394,7 +381,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Acknowledgements
 
-- **Graphviz**: For providing powerful graph visualization tools.
+- **Streamlit**: For providing an easy way to create interactive web applications.
 - **Matplotlib**: For making data visualization in Python accessible and versatile.
 - **Pillow**: For easy image creation and manipulation.
 - **Contributors**: Thank you to everyone who has contributed to this project.
