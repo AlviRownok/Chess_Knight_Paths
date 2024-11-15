@@ -82,24 +82,40 @@ Experience the application live at: [https://chessknightpaths-v42.streamlit.app/
 
 ### Local Installation
 
-#### 1. Clone the Repository
+#### **Option 1: Using the Provided Zip File**
+
+If you are running the program locally using the provided zip file, the working directory is:
+
+```
+C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\kiwifarm_knight
+```
+
+- Replace `YourUsername` with your actual Windows username.
+- All commands and executions should be performed within this directory.
+- **Important**: To run everything smoothly, **Docker Desktop** should be open and running in the background.
+
+#### **Option 2: Cloning the Repository**
+
+Alternatively, you can clone the repository from GitHub.
+
+##### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/AlviRownok/Chess_Knight_Paths.git
 cd Chess_Knight_Paths
 ```
 
-#### 2. Install Python Dependencies
+##### 2. Install Python Dependencies
 
 It's recommended to use a virtual environment.
 
-##### **Create a Virtual Environment**
+###### **Create a Virtual Environment**
 
 ```bash
 python -m venv venv
 ```
 
-##### **Activate the Virtual Environment**
+###### **Activate the Virtual Environment**
 
 - **Windows**:
 
@@ -113,11 +129,13 @@ python -m venv venv
   source venv/bin/activate
   ```
 
-##### **Install the Dependencies**
+###### **Install the Dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
+
+---
 
 ### Docker Installation
 
@@ -126,10 +144,13 @@ If you prefer to run the project in a Docker container, follow these steps.
 #### 1. Install Docker
 
 - **Windows**: [Download Docker Desktop](https://www.docker.com/products/docker-desktop)
+  - **Note**: Ensure that Docker Desktop is installed and open in the background.
 - **macOS**: [Download Docker Desktop](https://www.docker.com/products/docker-desktop)
 - **Linux**: Install Docker Engine via your package manager.
 
 #### 2. Build the Docker Image
+
+Navigate to the project directory (e.g., `C:\Users\YourUsername\Downloads\Project_Submissions_Alvi_Rownok\Part_1\kiwifarm_knight`), then run:
 
 ```bash
 docker build -t knight-paths-app .
@@ -144,8 +165,6 @@ docker run -p 8501:8501 --rm knight-paths-app
 **Access the App**
 
 After running the Docker container, you can access the Streamlit app in your browser at [http://localhost:8501](http://localhost:8501).
-
-**Note**: On Windows, you may need to adjust the volume mount path.
 
 ---
 
@@ -338,6 +357,16 @@ Chess_Knight_Paths/
 - **Streamlit App Not Loading**:
   - **Issue**: The app does not load when running locally.
   - **Solution**: Ensure all dependencies are installed and that you are using the correct Python version.
+
+- **Docker Container Exits Immediately**:
+  - **Issue**: The Docker container stops running shortly after starting.
+  - **Solution**:
+    - Ensure that Docker Desktop is open and running in the background.
+    - Check the container logs for error messages using:
+
+      ```bash
+      docker logs knight-paths-app
+      ```
 
 ---
 
