@@ -10,7 +10,6 @@ RUN apt-get update && \
         libjpeg-dev \
         zlib1g-dev \
         fonts-dejavu-core \
-        ttf-dejavu-core \
         build-essential \
         && rm -rf /var/lib/apt/lists/*
 
